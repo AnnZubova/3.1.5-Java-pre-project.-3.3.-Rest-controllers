@@ -8,5 +8,8 @@ public interface RoleService {
     List<Role> getAllRole();
 
     void add(Role role);
+    void deleteById(Long id);
+
+    Role showUserById(Long id);
 
 }
