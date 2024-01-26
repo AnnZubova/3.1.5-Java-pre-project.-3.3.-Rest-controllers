@@ -17,17 +17,17 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "email")
+    private String username;
     @JoinColumn(name = "first_name")
     private String firstName;
     private String lastName;
     private Long age;
 
-    private String email;
-
     private String password;
 
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
-    @JoinTable(name = "user_roles",
+    @ManyToMany //(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<Role> roles;
@@ -35,18 +35,21 @@ public class User implements UserDetails {
         public User() {
     }
 
-    public User(String firstName, String lastName, Long age, String email, String password, Collection<Role> roles) {
+    public User(String firstName, String lastName, Long age, String password, String username, Collection<Role> roles) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
-        this.email = email;
+        this.username = username;
         this.password = password;
         this.roles = roles;
     }
-
-    public String getEmail() {
-        return email;
+    public User(String firstName, String lastName, Long age, String username) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = age;
+        this.username = username;
     }
+
 
     public String getFirstName() {
         return firstName;
@@ -71,7 +74,11 @@ public class User implements UserDetails {
     }
 
     public String getUsername() {
-        return email;
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
     public Long getId() {
         return id;
@@ -101,13 +108,11 @@ public class User implements UserDetails {
         return true;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
+        return getRoles();
     }
 
     public String getPassword() {
@@ -124,5 +129,18 @@ public class User implements UserDetails {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", age=" + age +
+                ", email='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", roles=" + roles +
+                '}';
     }
 }

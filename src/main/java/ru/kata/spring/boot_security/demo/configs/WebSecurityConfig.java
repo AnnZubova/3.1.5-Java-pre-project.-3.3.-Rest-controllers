@@ -11,16 +11,17 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.kata.spring.boot_security.demo.service.UserService;
+import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    private final UserService userService;
+    private final UserServiceImpl userService;
     private final SuccessUserHandler successUserHandler;
 
     @Autowired
-    public WebSecurityConfig(UserService userService, SuccessUserHandler successUserHandler) {
+    public WebSecurityConfig(UserServiceImpl userService, SuccessUserHandler successUserHandler) {
         this.successUserHandler = successUserHandler;
         this.userService = userService;
     }
@@ -31,17 +32,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf()
                 .disable()
                 .authorizeRequests()
+                .antMatchers("/api/**").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/user/**").hasAnyRole("ADMIN","USER")
+                .antMatchers("/news/**").hasAnyRole("USER")
+                .antMatchers("/", "/resources/**").permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .formLogin().successHandler(successUserHandler)
                 .permitAll()
                 .and()
+                .formLogin()
+                .loginPage("/")
+                .permitAll()
+                .and()
                 .logout()
-                .logoutSuccessUrl("/login");
+                .permitAll()
+                .logoutSuccessUrl("/");
     }
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
     @Bean
