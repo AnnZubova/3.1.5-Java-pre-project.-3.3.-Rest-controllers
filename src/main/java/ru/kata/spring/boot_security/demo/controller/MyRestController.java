@@ -23,19 +23,19 @@ public class MyRestController {
     }
 
     @GetMapping("/api/admin")
-    public ResponseEntity<List<User>> getAllUsers() { //+getUserForAdminPage
+    public ResponseEntity<List<User>> getAllUsers() {
         List<User> list = userService.allUsers();
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
     @GetMapping("/admin")
     public ModelAndView adminPage() {
-        ModelAndView modelAndView = new ModelAndView();//+
+        ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("admin");
         return modelAndView;
     }
     @GetMapping("/user")
     public ModelAndView userPage() {
-        ModelAndView modelAndView = new ModelAndView();//+
+        ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("user");
         return modelAndView;
     }
@@ -45,17 +45,17 @@ public class MyRestController {
     }
 
     @GetMapping("/api/roles")
-    public ResponseEntity<List<Role>> getAllRoles() { //++
+    public ResponseEntity<List<Role>> getAllRoles() {
         return new ResponseEntity<>(userService.roleList(), HttpStatus.OK);
     }
     @GetMapping("/api/user")
-    public ResponseEntity<User> getUser(Principal principal) {// +
+    public ResponseEntity<User> getUser(Principal principal) {
         return new ResponseEntity<>(userService.findByEmail(principal.getName()), HttpStatus.OK);
     }
 
 
     @PostMapping("/api/admin")
-    public ResponseEntity<User> saveNewUser(@RequestBody User user) { //addUserAction
+    public ResponseEntity<User> saveNewUser(@RequestBody User user) {
         userService.addUser(user);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
