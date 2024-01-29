@@ -4,24 +4,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import org.springframework.web.servlet.ModelAndView;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
-import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
-import java.security.Principal;
+
 import java.util.List;
 
 @RestController
-public class MyRestController {
+public class AdminRestController {
     private final UserService userService;
+
     @Autowired
-    public MyRestController(UserService userService) {
+    public AdminRestController(UserService userService) {
         this.userService = userService;
     }
-
     @GetMapping("/api/admin")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> list = userService.allUsers();
@@ -33,12 +31,7 @@ public class MyRestController {
         modelAndView.setViewName("admin");
         return modelAndView;
     }
-    @GetMapping("/user")
-    public ModelAndView userPage() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("user");
-        return modelAndView;
-    }
+
     @GetMapping("/api/admin/{id}")
     public User getUserById(@PathVariable  Long id) {
         return userService.findById(id);
@@ -48,10 +41,7 @@ public class MyRestController {
     public ResponseEntity<List<Role>> getAllRoles() {
         return new ResponseEntity<>(userService.roleList(), HttpStatus.OK);
     }
-    @GetMapping("/api/user")
-    public ResponseEntity<User> getUser(Principal principal) {
-        return new ResponseEntity<>(userService.findByEmail(principal.getName()), HttpStatus.OK);
-    }
+
 
 
     @PostMapping("/api/admin")
